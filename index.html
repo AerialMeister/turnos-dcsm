@@ -271,8 +271,18 @@ async function saveChanges(){
     });
   });
   try{
+    // Delete existing records first, then insert new ones
+    var deletePromises=records.map(function(r){
+      var params=encodeURIComponent(r.tecnico);
+      var fi=encodeURIComponent(r.fecha_inicio);
+      return fetch(SUPABASE_URL+'/rest/v1/turnos?tecnico=eq.'+params+'&fecha_inicio=eq.'+fi,{
+        method:'DELETE',
+        headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON}
+      });
+    });
+    await Promise.all(deletePromises);
     var res=await fetch(SUPABASE_URL+'/rest/v1/turnos',{method:'POST',
-      headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Prefer':'resolution=merge-duplicates,return=minimal'},
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Prefer':'return=minimal'},
       body:JSON.stringify(records)});
     if(res.ok){
       Object.keys(modifications).forEach(function(n){Object.keys(modifications[n]).forEach(function(d){
