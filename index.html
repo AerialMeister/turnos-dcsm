@@ -397,30 +397,34 @@ var toastTimer;
 function showToast(msg){var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show');},3000);}
 
 // Load saved changes from Supabase on startup
+// Fetch only records with id > base (modified after initial load)
+// Strategy: get latest record per tecnico+date using order by id desc
 async function init(){
   try{
-    var url=SUPABASE_URL+'/rest/v1/turnos?select=tecnico,tipo_turno,fecha_inicio&order=fecha_inicio';
-    var res=await fetch(url,{
-      method:'GET',
-      headers:{
-        'apikey':SUPABASE_ANON,
-        'Authorization':'Bearer '+SUPABASE_ANON,
-        'Content-Type':'application/json',
-        'Accept':'application/json'
-      }
-    });
+    // Get the max id from initial bulk load to know which records were modified after
+    var urlMax=SUPABASE_URL+'/rest/v1/turnos?select=id&order=id.asc&limit=1';
+    var resMax=await fetch(urlMax,{method:'GET',headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Accept':'application/json'}});
+    var minId=0;
+    if(resMax.ok){var minData=await resMax.json();if(minData.length)minId=0;}
+
+    // Fetch records modified after bulk load (id > 4048)
+    var url=SUPABASE_URL+'/rest/v1/turnos?select=tecnico,tipo_turno,fecha_inicio&id=gt.4048&order=id.asc';
+    var res=await fetch(url,{method:'GET',headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Accept':'application/json'}});
     if(res.ok){
       var rows=await res.json();
-      var codeMap={'Día':'D','Tarde':'T','Noche':'N','Libre':'L','Compensado':'C','Extendido':'E','Vacaciones':'V','Licencia':'I'};
-      rows.forEach(function(row){
-        var name=row.tecnico;
-        var dateStr=row.fecha_inicio.slice(0,10);
-        var code=codeMap[row.tipo_turno]||null;
-        if(!code||!name)return;
-        if(!RAW_SCHEDULE[name])RAW_SCHEDULE[name]={t:{}};
-        if(!RAW_SCHEDULE[name].t)RAW_SCHEDULE[name].t={};
-        RAW_SCHEDULE[name].t[dateStr]=code;
-      });
+      if(rows.length>0){
+        var codeMap={'Día':'D','Tarde':'T','Noche':'N','Libre':'L','Compensado':'C','Extendido':'E','Vacaciones':'V','Licencia':'I'};
+        rows.forEach(function(row){
+          var name=row.tecnico;
+          var dateStr=row.fecha_inicio.slice(0,10);
+          var code=codeMap[row.tipo_turno]||null;
+          if(!code||!name)return;
+          if(!RAW_SCHEDULE[name])RAW_SCHEDULE[name]={t:{}};
+          if(!RAW_SCHEDULE[name].t)RAW_SCHEDULE[name].t={};
+          RAW_SCHEDULE[name].t[dateStr]=code;
+        });
+        console.log('Loaded '+rows.length+' override(s) from Supabase');
+      }
     }
   }catch(e){console.log('Supabase load error:',e);}
   render();
