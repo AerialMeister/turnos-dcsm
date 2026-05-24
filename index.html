@@ -265,8 +265,8 @@ async function saveChanges(){
     var group=techGroup[n];
     Object.keys(modifications[n]).forEach(function(d){
       var code=modifications[n][d],s=SHIFTS[code];
-      var fi=d+'T'+(s.inicio||'00:00')+':00';
-      var ff=code==='T'?ds(addDays(new Date(d+' 00:00:00'),1))+'T00:30:00':(s.fin?d+'T'+s.fin+':00':d+'T23:59:00');
+      var fi=d+'T'+(s.inicio||'00:00')+':00+00';
+      var ff=code==='T'?ds(addDays(new Date(d+' 00:00:00'),1))+'T00:30:00+00':(s.fin?d+'T'+s.fin+':00+00':d+'T23:59:00+00');
       records.push({tecnico:n,especialidad:group?group.esp:'',tipo_turno:CODE_TO_TIPO[code]||code,fecha_inicio:fi,fecha_fin:ff,supervisor:getSupervisor(d)});
     });
   });
