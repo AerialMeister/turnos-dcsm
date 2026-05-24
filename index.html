@@ -396,7 +396,36 @@ function renderAlerts(){
 var toastTimer;
 function showToast(msg){var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show');},3000);}
 
-render();
+// Load saved changes from Supabase on startup
+async function init(){
+  try{
+    var url=SUPABASE_URL+'/rest/v1/turnos?select=tecnico,tipo_turno,fecha_inicio&order=fecha_inicio';
+    var res=await fetch(url,{
+      method:'GET',
+      headers:{
+        'apikey':SUPABASE_ANON,
+        'Authorization':'Bearer '+SUPABASE_ANON,
+        'Content-Type':'application/json',
+        'Accept':'application/json'
+      }
+    });
+    if(res.ok){
+      var rows=await res.json();
+      var codeMap={'Día':'D','Tarde':'T','Noche':'N','Libre':'L','Compensado':'C','Extendido':'E','Vacaciones':'V','Licencia':'I'};
+      rows.forEach(function(row){
+        var name=row.tecnico;
+        var dateStr=row.fecha_inicio.slice(0,10);
+        var code=codeMap[row.tipo_turno]||null;
+        if(!code||!name)return;
+        if(!RAW_SCHEDULE[name])RAW_SCHEDULE[name]={t:{}};
+        if(!RAW_SCHEDULE[name].t)RAW_SCHEDULE[name].t={};
+        RAW_SCHEDULE[name].t[dateStr]=code;
+      });
+    }
+  }catch(e){console.log('Supabase load error:',e);}
+  render();
+}
+init();
 
 </script>
 </body>
