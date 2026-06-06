@@ -371,7 +371,7 @@ async function saveChanges(){
 var midPanelMonth=(new Date()).getMonth();
 var midPanelYear=(new Date()).getFullYear();
 // MID PANEL: Libres+Compensados en domingos
-function renderMidPanel(){
+function renderMidPanel(newM,newY){if(newM!==undefined){midPanelMonth=newM;midPanelYear=newY;}
   var now=new Date();now.setHours(0,0,0,0);
   var year=now.getFullYear(),month=now.getMonth();
   var daysInMonth=new Date(year,month+1,0).getDate();
@@ -385,9 +385,9 @@ function renderMidPanel(){
 var nextM=(month+1)%12,nextY=month===11?year+1:year;
 var h='<div class="mid-header">L+C en domingos</div>';
 h+='<div class="mid-month-nav">';
-h+='<button class="mid-nav-btn" onclick="midPanelMonth='+prevM+';midPanelYear='+prevY+';renderMidPanel()">&#9664;</button>';
+h+='<button class="mid-nav-btn" onclick="renderMidPanel('+prevM+','+prevY+')">&#9664;</button>';
 h+='<span class="mid-month-label">'+MONTHS[month]+' '+year+'</span>';
-h+='<button class="mid-nav-btn" onclick="midPanelMonth='+nextM+';midPanelYear='+nextY+';renderMidPanel()">&#9654;</button>';
+h+='<button class="mid-nav-btn" onclick="renderMidPanel('+nextM+','+nextY+')">&#9654;</button>';
 h+='</div>';
   var MID_EXCLUDE=['Gonzalo Muñoz','Yonathan Solorzano'];
   GROUPS.forEach(function(group){
