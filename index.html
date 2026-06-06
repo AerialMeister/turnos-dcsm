@@ -372,10 +372,8 @@ var midPanelMonth=(new Date()).getMonth();
 var midPanelYear=(new Date()).getFullYear();
 // MID PANEL: Libres+Compensados en domingos
 function renderMidPanel(newM,newY){if(newM!==undefined){midPanelMonth=newM;midPanelYear=newY;}
-  var now=new Date();now.setHours(0,0,0,0);
-  var year=now.getFullYear(),month=now.getMonth();
+  var month=midPanelMonth,year=midPanelYear;
   var daysInMonth=new Date(year,month+1,0).getDate();
-  // Get all Sundays of current month
   var sundays=[];
   for(var d=1;d<=daysInMonth;d++){
     var date=new Date(year,month,d);
