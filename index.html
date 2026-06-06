@@ -364,7 +364,9 @@ async function saveChanges(){
   btn.textContent='Guardar';btn.disabled=Object.keys(modifications).length===0;
 }
 
-// MID PANEL: Libres+Compensados en domingos del mes actual
+var midPanelMonth=(new Date()).getMonth();
+var midPanelYear=(new Date()).getFullYear();
+// MID PANEL: Libres+Compensados en domingos
 function renderMidPanel(){
   var now=new Date();now.setHours(0,0,0,0);
   var year=now.getFullYear(),month=now.getMonth();
@@ -375,7 +377,14 @@ function renderMidPanel(){
     var date=new Date(year,month,d);
     if(date.getDay()===0)sundays.push(ds(date));
   }
-  var h='<div class="mid-header">L+C en domingos<br><span style="font-size:9px;color:var(--border)">'+MONTHS[month]+'</span></div>';
+  var prevM=(month+11)%12,prevY=month===0?year-1:year;
+var nextM=(month+1)%12,nextY=month===11?year+1:year;
+var h='<div class="mid-header">L+C en domingos</div>';
+h+='<div class="mid-month-nav">';
+h+='<button class="mid-nav-btn" onclick="midPanelMonth='+prevM+';midPanelYear='+prevY+';renderMidPanel()">&#9664;</button>';
+h+='<span class="mid-month-label">'+MONTHS[month]+' '+year+'</span>';
+h+='<button class="mid-nav-btn" onclick="midPanelMonth='+nextM+';midPanelYear='+nextY+';renderMidPanel()">&#9654;</button>';
+h+='</div>';
   var MID_EXCLUDE=['Gonzalo Muñoz','Yonathan Solorzano'];
   GROUPS.forEach(function(group){
     h+='<div class="mid-group-title">'+group.icon+' '+group.esp+'</div>';
@@ -427,12 +436,17 @@ function renderAlerts(){
       group.members.forEach(function(name){var c=getCode(name,dateStr);if(c!==null)dayCodes[name]=c;});
       if(Object.keys(dayCodes).length<3)return;
       var codes=Object.keys(dayCodes).map(function(k){return dayCodes[k];});
-      var hasD=codes.indexOf('D')>=0||codes.indexOf('E')>=0,hasT=codes.indexOf('T')>=0,hasN=codes.indexOf('N')>=0;
-      if(!hasD||!hasT||!hasN){
-        var missing=[];if(!hasD)missing.push('D');if(!hasT)missing.push('T');if(!hasN)missing.push('N');
-        var dd=new Date(dateStr+' 00:00:00');
-        var mpills=missing.map(function(c){return '<span class="shift-pill chip-'+c+'">'+c+'</span>';}).join(' ');
-        alerts.medium.push({icon:'\u26a0\ufe0f',title:'Cobertura incompleta',group:group,who:null,date:dd.getDate()+' '+MONTHS[dd.getMonth()],detail:'Sin cobertura: '+mpills});
+      var eCount=codes.filter(function(c){return c==='E';}).length;
+      var hasD=codes.indexOf('D')>=0,hasT=codes.indexOf('T')>=0,hasN=codes.indexOf('N')>=0;
+      if(eCount<2){
+        var missing=[];
+        if(!hasD)missing.push('D');if(!hasT)missing.push('T');if(!hasN)missing.push('N');
+        if(eCount===1&&missing.length===1)missing=[];
+        if(missing.length>0){
+          var dd=new Date(dateStr+' 00:00:00');
+          var mpills=missing.map(function(c){return '<span class="shift-pill chip-'+c+'">'+c+'</span>';}).join(' ');
+          alerts.medium.push({icon:'\u26a0\ufe0f',title:'Cobertura incompleta',group:group,who:null,date:dd.getDate()+' '+MONTHS[dd.getMonth()],detail:'Sin cobertura: '+mpills});
+        }
       }
       ['D','T','N'].forEach(function(shift){
         var dupes=Object.keys(dayCodes).filter(function(n){return dayCodes[n]===shift;});
