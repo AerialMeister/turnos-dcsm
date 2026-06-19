@@ -7,10 +7,10 @@
 <style>
 :root{--bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;--text:#e6edf3;--text2:#7d8590;--accent:#2f81f7;--holiday:#ff6b35;--shadow:rgba(0,0,0,.5);}
 :root.light{--bg:#f6f8fa;--surface:#ffffff;--surface2:#f0f2f5;--border:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--holiday:#e05c00;--shadow:rgba(0,0,0,.15);}
-.light .chip-D{background:#bbf7d0;color:#15803d;}
-.light .chip-T{background:#fef08a;color:#92400e;}
-.light .chip-N{background:#93c5fd;color:#1e3a8a;}
-.light .chip-L{background:#f1f5f9;color:#57606a;}
+.light .chip-D{background:#f1f5f9;color:#57606a;}
+.light .chip-T{background:#f1f5f9;color:#57606a;}
+.light .chip-N{background:#f1f5f9;color:#57606a;}
+.light .chip-L{background:#bbf7d0;color:#15803d;}
 .light .chip-C{background:#ddd6fe;color:#5b21b6;}
 .light .chip-E{background:#fca5a5;color:#b91c1c;}
 .light .chip-V{background:#a5f3fc;color:#075985;}
@@ -76,10 +76,10 @@ th,td{border:1px solid var(--border);}
 .shift-chip{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:5px;font-size:11px;font-weight:700;transition:transform .1s;user-select:none;pointer-events:none;}
 .shift-chip:hover{transform:scale(1.15);}
 .shift-chip.modified{outline:2px solid #fff;outline-offset:1px;}
-.chip-D{background:#0d2d1a;color:#3fb950;}
-.chip-T{background:#2d1f00;color:#d29922;}
-.chip-N{background:#0c1f33;color:#388bfd;}
-.chip-L{background:#1c2128;color:#7d8590;}
+.chip-D{background:#1c2128;color:#7d8590;}
+.chip-T{background:#1c2128;color:#7d8590;}
+.chip-N{background:#1c2128;color:#7d8590;}
+.chip-L{background:#0d2d1a;color:#3fb950;}
 .chip-C{background:#1e1535;color:#a371f7;}
 .chip-E{background:#2d1515;color:#f47067;}
 .chip-V{background:#0a2a30;color:#22d3ee;}
@@ -209,10 +209,10 @@ const GROUPS=[
   {label:'Turno BMS',icon:'🖥',esp:'BMS',tagClass:'tag-bms',members:['Ciomara Sepúlveda','Franco Tamburini','Luis Valenzuela','Francisca Albarrán','Caroline Aróstica']}
 ];
 const SHIFTS={
-  D:{label:'Día',color:'#3fb950',bg:'#0d2d1a',inicio:'08:00',fin:'16:30'},
-  T:{label:'Tarde',color:'#d29922',bg:'#2d1f00',inicio:'16:00',fin:'00:30+1'},
-  N:{label:'Noche',color:'#388bfd',bg:'#0c1f33',inicio:'00:00',fin:'08:30'},
-  L:{label:'Libre',color:'#7d8590',bg:'#1c2128',inicio:null,fin:null},
+  D:{label:'Día',color:'#7d8590',bg:'#1c2128',inicio:'08:00',fin:'16:30'},
+  T:{label:'Tarde',color:'#7d8590',bg:'#1c2128',inicio:'16:00',fin:'00:30+1'},
+  N:{label:'Noche',color:'#7d8590',bg:'#1c2128',inicio:'00:00',fin:'08:30'},
+  L:{label:'Libre',color:'#3fb950',bg:'#0d2d1a',inicio:null,fin:null},
   C:{label:'Compensado',color:'#a371f7',bg:'#1e1535',inicio:null,fin:null},
   E:{label:'Extendido',color:'#f47067',bg:'#2d1515',inicio:null,fin:null},
   V:{label:'Vacaciones',color:'#22d3ee',bg:'#0a2a30',inicio:null,fin:null},
