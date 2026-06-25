@@ -193,10 +193,32 @@ th,td{border:1px solid var(--border);}
 .btn-mode{font-size:12px;}
 body.read-mode #btn-save,body.read-mode #btn-undo,body.read-mode #unsaved-badge{display:none!important;}
 body.read-mode .alert-close-btn,body.read-mode .alert-reopen-btn,body.read-mode .comment-item-actions{display:none!important;}
+/* Collapsible mid-panel */
+.mid-panel.collapsed{width:36px;min-width:36px;overflow:hidden;}
+.mid-panel-toggle{width:36px;height:42px;border:none;border-bottom:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.mid-panel-toggle:hover{color:var(--accent);}
+.mid-panel-header-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border);}
+.mid-panel-header-row .mid-header{padding:0;border-bottom:none;}
+.mid-panel-header-row .cp-toggle{background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--text2);cursor:pointer;font-size:11px;line-height:1;padding:3px 7px;flex-shrink:0;}
+.mid-panel-header-row .cp-toggle:hover{color:var(--text);border-color:var(--accent);}
+/* Collapsible alerts panel */
+.alerts-panel.collapsed{width:36px;min-width:36px;overflow:hidden;}
+.alerts-panel-toggle{width:36px;height:42px;border:none;border-bottom:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.alerts-panel-toggle:hover{color:var(--accent);}
+.alerts-header-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:5;}
+.alerts-header-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:8px;}
+/* Cell color picker in dropdown */
+.dd-color-section{padding:8px;border-top:1px solid var(--border);margin-top:4px;}
+.dd-color-label{font-size:9px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.dd-color-swatches{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px;}
+.dd-color-swatch{width:20px;height:20px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:border-color .1s;}
+.dd-color-swatch:hover,.dd-color-swatch.active{border-color:#fff;}
+.dd-color-clear{font-size:10px;color:var(--text2);cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:2px 6px;width:100%;margin-top:2px;}
+.dd-color-clear:hover{color:var(--text);border-color:var(--accent);}
 </style>
 </head>
 <body>
-<div class="app-header"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJDYXBhXzIiIHZpZXdCb3g9IjAgMCA1NTguNyA2MC41Ij48ZGVmcz48c3R5bGU+ICAgICAgLnN0MCB7ICAgICAgICBmaWxsOiAjMjc3ZmZiOyAgICAgIH0gICAgPC9zdHlsZT48L2RlZnM+PGcgaWQ9IkNhcGFfMS0yIj48Zz48cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjExNi40IC44IDEyNS45IC44IDE1NC42IDQ1LjkgMTU0LjkgNDUuOSAxNTQuOSAuOCAxNjMuNiAuOCAxNjMuNiA1OS42IDE1My45IDU5LjYgMTI1LjQgMTQuOSAxMjUuMiAxNC45IDEyNS4yIDU5LjYgMTE2LjQgNTkuNiAxMTYuNCAuOCI+PC9wb2x5Z29uPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNzEsMzcuOGMwLTE2LjEsOS42LTIyLjgsMjAuOS0yMi44czE5LjksNi44LDE5LjksMjIuMSwwLDIuNC0uMiwzLjNoLTMyLjRjLjcsOS4yLDUuMywxMy40LDEzLjEsMTMuNHM5LjUtMS45LDExLjQtNy4xaDcuNmMtMi42LDkuOC0xMC4xLDEzLjctMTksMTMuN3MtMjEuMi02LjktMjEuMi0yMi42TTIwMy43LDM0LjFjLS4yLTcuNi00LjUtMTIuNC0xMS45LTEyLjRzLTExLjgsNC0xMi41LDEyLjRoMjQuNSwwWiI+PC9wYXRoPjxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMjI5LjIgMzcuNSAyMTQuMyAxNS45IDIyMy42IDE1LjkgMjMzLjkgMzEuMyAyNDQuMiAxNS45IDI1My42IDE1LjkgMjM4LjcgMzcuNSAyNTQuMiA1OS42IDI0NC44IDU5LjYgMjMzLjkgNDMuNyAyMjIuOSA1OS42IDIxMy43IDU5LjYgMjI5LjIgMzcuNSI+PC9wb2x5Z29uPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0yNjUuMyw0OC41di0yNS45aC03LjF2LTYuN2g3LjFWNC45aDguNXYxMWg4Ljd2Ni43aC04Ljd2MjQuNWMwLDQuMywxLjQsNi4yLDYuMSw2LjJzMS44LDAsMy4xLS4ydjYuNGMtMS42LjQtMy41LjctNS41LjctNy4zLDAtMTIuMy0zLjEtMTIuMy0xMS43Ij48L3BhdGg+PHBhdGggY2xhc3M9InN0MCIgZD0iTTI4OC42LDQxLjhoOC45Yy4zLDYuMyw0LjUsMTEuMywxNC4zLDExLjNzMTMuMy0zLjksMTMuMy05LjktNC4xLTguMi0xMC42LTkuNWwtNy45LTEuNmMtMTAtMi0xNi4zLTYuNy0xNi4zLTE1LjhzNy44LTE2LjIsMjEuMS0xNi4yLDIxLjIsNi4xLDIxLjIsMTYuNWgtOC45YzAtNS42LTQuNC05LjEtMTIuNS05LjFzLTExLjksMy45LTExLjksOC44LDIuNSw3LjMsOS41LDguOGw3LjYsMS41YzExLjgsMi40LDE3LjgsNy4yLDE3LjgsMTYuNnMtOSwxNy40LTIyLjUsMTcuNC0yMy4xLTcuMy0yMy4xLTE4LjciPjwvcGF0aD48cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzQ1LjksNDguNXYtMjUuOWgtNy4xdi02LjdoNy4xVjQuOWg4LjV2MTFoOC43djYuN2gtOC43djI0LjVjMCw0LjMsMS40LDYuMiw2LjEsNi4yczEuOCwwLDMuMS0uMnY2LjRjLTEuNi40LTMuNS43LTUuNS43LTcuMywwLTEyLjMtMy4xLTEyLjMtMTEuNyI+PC9wYXRoPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0zNzAuNSwxNS45aDguNXYxMC4xaC4yYzEuMy01LjEsNS40LTEwLjYsMTMuNC0xMC42czIuMywwLDMuMy40djcuMWMtMS4xLS4yLTIuMS0uMi0zLjItLjItOC4yLDAtMTMuNyw1LjMtMTMuNywxNS4xdjIxLjloLTguNVYxNS45WiI+PC9wYXRoPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0zOTksMzcuOGMwLTE2LjEsOS42LTIyLjgsMjAuOS0yMi44czE5LjksNi44LDE5LjksMjIuMSwwLDIuNC0uMiwzLjNoLTMyLjRjLjcsOS4yLDUuMywxMy40LDEzLjEsMTMuNHM5LjUtMS45LDExLjQtNy4xaDcuNmMtMi42LDkuOC0xMC4xLDEzLjctMTksMTMuN3MtMjEuMi02LjktMjEuMi0yMi42TTQzMS43LDM0LjFjLS4yLTcuNi00LjUtMTIuNC0xMS45LTEyLjRzLTExLjgsNC0xMi41LDEyLjRoMjQuNSwwWiI+PC9wYXRoPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik00NDUsNDguMmMwLTguNCw2LjEtMTEuOSwxNC0xMi44bDEwLjktMS4zYzQtLjUsNS40LTEuMyw1LjQtMi42di0xLjJjMC03LTMuNi04LjgtOS44LTguOHMtOS44LDEuOS05LjgsNy40djFoLTguMnYtMS44YzAtOC44LDYuMS0xMy4xLDE4LjItMTMuMXMxOC4xLDQuNiwxOC4xLDE1LjJ2MjkuNGgtOHYtNy4xaC0uM2MtLjgsMS43LTUsNy45LTE1LjcsNy45cy0xNC42LTMuNi0xNC42LTEyLjNNNDYxLjgsNTMuOGM5LjIsMCwxMy41LTUuNywxMy41LTEwLjR2LTQuOGMtLjYuOS0xLjcsMS41LTYsMmwtOC4yLDEuMWMtNS41LjctNy41LDIuNi03LjUsNi4xczMsNi4xLDguMiw2LjEiPjwvcGF0aD48cGF0aCBjbGFzcz0ic3QwIiBkPSJNNTQwLjgsMjIuMmMtNi4xLDAtMTAuNCw0LjMtMTAuNCwxMi4xdjI1LjNoLTguNXYtMjUuM2MwLTcuOC0zLjEtMTIuMS05LjQtMTIuMXMtMTAuNCw0LjMtMTAuNCwxMi4xdjI1LjNoLTguNVYxNS45aDguNXY4LjhoLjJjLjctMy4zLDQuOS05LjYsMTMuNS05LjZzMTEuNCwyLjksMTMuNSw5LjljMS0zLjUsNS4zLTkuOSwxNC41LTkuOXMxNC45LDUsMTQuOSwxNy4zdjI3LjJoLTguNXYtMjUuM2MwLTcuOC0zLTEyLjEtOS40LTEyLjEiPjwvcGF0aD48cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTAxLjEsMjYuOWgtMjdjLTQuNywwLTkuMy0xLjEtMTMuNi0zLjJsLTIxLjMtMTAuNmMtMy45LTItOC4zLTMtMTIuNy0zSDBWLjhoMjdjNC43LDAsOS40LDEuMSwxMy42LDMuMmwyMS4zLDEwLjZjMy45LDIsOC4zLDMsMTIuNywzaDI2LjZzMCw5LjQsMCw5LjRaTTEwMS4xLDM0LjNoLTI2LjZjLTQuNCwwLTguNy0xLTEyLjctM2wtMjEuMy0xMC42Yy00LjItMi4xLTguOS0zLjItMTMuNi0zLjJIMHY5LjRoMjYuNmM0LjQsMCw4LjcsMSwxMi43LDNsMjEuMywxMC42YzQuMiwyLjEsOC45LDMuMiwxMy42LDMuMmgyN3YtOS40aDBaTTEwMS4xLDUxLjFoLTI2LjZjLTQuNCwwLTguNy0xLTEyLjctM2wtMjEuMy0xMC42Yy00LjItMi4xLTguOS0zLjItMTMuNi0zLjJIMHY5LjRoMjYuNmM0LjQsMCw4LjcsMSwxMi43LDNsMjEuMywxMC42YzQuMiwyLjEsOC45LDMuMiwxMy42LDMuMmgyN3YtOS40Wk0zNy41LDYwLjVsLTEyLjUtNi4yYy00LjItMi4xLTguOS0zLjItMTMuNi0zLjJIMHY5LjRoMzcuNVpNNjMuNi44bDEyLjUsNi4yYzQuMiwyLjEsOC45LDMuMiwxMy42LDMuMmgxMS41Vi44aC0zNy41WiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+" class="header-logo" alt="NextStream"><span class="header-sep">|</span><span class="header-label">Panel de Turnos</span><span class="header-sep">&mdash;</span><span class="header-label">Datacenter</span><span class="header-dcsm">DCSM</span><span style="flex:1"></span><span class="unsaved-badge" id="unsaved-badge" style="display:none">&#9679; Sin guardar</span><button class="btn btn-mode" id="btn-mode" onclick="location.reload()" title="Cambiar modo de acceso"></button><button class="btn btn-theme" id="btn-theme" onclick="toggleTheme()" title="Cambiar tema">🌙</button><button class="btn btn-danger" id="btn-undo" onclick="undoChanges()" disabled>&#8629; Deshacer</button><button class="btn btn-primary" id="btn-save" onclick="saveChanges()" disabled>Guardar</button></div><div class="legend"><div class="legend-item"><div class="legend-chip chip-D">D</div>D&iacute;a 08:00&ndash;16:30</div><div class="legend-item"><div class="legend-chip chip-T">T</div>Tarde 16:00&ndash;00:30</div><div class="legend-item"><div class="legend-chip chip-N">N</div>Noche 00:00&ndash;08:30</div><div class="legend-item"><div class="legend-chip chip-L">L</div>Libre</div><div class="legend-item"><div class="legend-chip chip-C">C</div>Compensado</div><div class="legend-item"><div class="legend-chip chip-E">E</div>Extendido</div><div class="legend-item"><div class="legend-chip chip-V">V</div>Vacaciones</div><div class="legend-item"><div class="legend-chip chip-I">I</div>Licencia</div><div class="legend-item" style="color:var(--holiday)">&#x1F7E0; Feriado</div></div><div class="cal-nav"><button onclick="nav(-4)">&#9664;&#9664;</button><button onclick="nav(-1)">&#9664;</button><div class="date-range" id="date-range"></div><button onclick="nav(1)">&#9654;</button><button onclick="nav(4)">&#9654;&#9654;</button><button class="today-btn" onclick="goToday()">Hoy</button></div><div class="main-layout"><div class="cal-wrapper"><table id="cal-table"></table></div><div class="comments-panel" id="comments-panel"><div class="comments-panel-title">&#128172; Comentarios</div><div class="comments-empty">Sin comentarios</div></div><div class="mid-panel" id="mid-panel"></div><div class="alerts-panel" id="alerts-panel"></div></div><div class="shift-dropdown" id="dropdown"></div><div class="comment-tooltip" id="comment-tooltip"></div><div id="login-overlay"><div class="login-box"><h1>Panel de Turnos DCSM</h1><p>Selecciona c&oacute;mo deseas ingresar</p><div id="login-choices"><button class="login-btn primary" id="login-admin">&#128274; Administrador</button><button class="login-btn" id="login-read">&#128065;&#65039; Modo Lectura</button></div><div id="login-pass"><input type="password" class="login-input" id="login-pass-input" placeholder="Clave de administrador" autocomplete="off"><button class="login-btn primary" id="login-pass-submit">Ingresar</button><div id="login-error"></div><button id="login-back">&#8592; Volver</button></div></div></div><div id="toast"></div>
+<div class="app-header"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJDYXBhXzIiIHZpZXdCb3g9IjAgMCA1NTguNyA2MC41Ij48ZGVmcz48c3R5bGU+ICAgICAgLnN0MCB7ICAgICAgICBmaWxsOiAjMjc3ZmZiOyAgICAgIH0gICAgPC9zdHlsZT48L2RlZnM+PGcgaWQ9IkNhcGFfMS0yIj48Zz48cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjExNi40IC44IDEyNS45IC44IDE1NC42IDQ1LjkgMTU0LjkgNDUuOSAxNTQuOSAuOCAxNjMuNiAuOCAxNjMuNiA1OS42IDE1My45IDU5LjYgMTI1LjQgMTQuOSAxMjUuMiAxNC45IDEyNS4yIDU5LjYgMTE2LjQgNTkuNiAxMTYuNCAuOCI+PC9wb2x5Z29uPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNzEsMzcuOGMwLTE2LjEsOS42LTIyLjgsMjAuOS0yMi44czE5LjksNi44LDE5LjksMjIuMSwwLDIuNC0uMiwzLjNoLTMyLjRjLjcsOS4yLDUuMywxMy40LDEzLjEsMTMuNHM5LjUtMS45LDExLjQtNy4xaDcuNmMtMi42LDkuOC0xMC4xLDEzLjctMTksMTMuN3MtMjEuMi02LjktMjEuMi0yMi42TTIwMy43LDM0LjFjLS4yLTcuNi00LjUtMTIuNC0xMS45LTEyLjRzLTExLjgsNC0xMi41LDEyLjRoMjQuNSwwWiI+PC9wYXRoPjxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMjI5LjIgMzcuNSAyMTQuMyAxNS45IDIyMy42IDE1LjkgMjMzLjkgMzEuMyAyNDQuMiAxNS45IDI1My42IDE1LjkgMjM4LjcgMzcuNSAyNTQuMiA1OS42IDI0NC44IDU5LjYgMjMzLjkgNDMuNyAyMjIuOSA1OS42IDIxMy43IDU5LjYgMjI5LjIgMzcuNSI+PC9wb2x5Z29uPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0yNjUuMyw0OC41di0yNS45aC03LjF2LTYuN2g3LjFWNC45aDguNXYxMWg4Ljd2Ni43aC04Ljd2MjQuNWMwLDQuMywxLjQsNi4yLDYuMSw2LjJzMS44LDAsMy4xLS4ydjYuNGMtMS42LjQtMy41LjctNS41LjctNy4zLDAtMTIuMy0zLjEtMTIuMy0xMS43Ij48L3BhdGg+PHBhdGggY2xhc3M9InN0MCIgZD0iTTI4OC42LDQxLjhoOC45Yy4zLDYuMyw0LjUsMTEuMywxNC4zLDExLjNzMTMuMy0zLjksMTMuMy05LjktNC4xLTguMi0xMC42LTkuNWwtNy45LTEuNmMtMTAtMi0xNi4zLTYuNy0xNi4zLTE1LjhzNy44LTE2LjIsMjEuMS0xNi4yLDIxLjIsNi4xLDIxLjIsMTYuNWgtOC45YzAtNS42LTQuNC05LjEtMTIuNS05LjFzLTExLjksMy45LTExLjksOC44LDIuNSw3LjMsOS41LDguOGw3LjYsMS41YzExLjgsMi40LDE3LjgsNy4yLDE3LjgsMTYuNnMtOSwxNy40LTIyLjUsMTcuNC0yMy4xLTcuMy0yMy4xLTE4LjciPjwvcGF0aD48cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzQ1LjksNDguNXYtMjUuOWgtNy4xdi02LjdoNy4xVjQuOWg4LjV2MTFoOC43djYuN2gtOC43djI0LjVjMCw0LjMsMS40LDYuMiw2LjEsNi4yczEuOCwwLDMuMS0uMnY2LjRjLTEuNi40LTMuNS43LTUuNS43LTcuMywwLTEyLjMtMy4xLTEyLjMtMTEuNyI+PC9wYXRoPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0zNzAuNSwxNS45aDguNXYxMC4xaC4yYzEuMy01LjEsNS40LTEwLjYsMTMuNC0xMC42czIuMywwLDMuMy40djcuMWMtMS4xLS4yLTIuMS0uMi0zLjItLjItOC4yLDAtMTMuNyw1LjMtMTMuNywxNS4xdjIxLjloLTguNVYxNS45WiI+PC9wYXRoPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0zOTksMzcuOGMwLTE2LjEsOS42LTIyLjgsMjAuOS0yMi44czE5LjksNi44LDE5LjksMjIuMSwwLDIuNC0uMiwzLjNoLTMyLjRjLjcsOS4yLDUuMywxMy40LDEzLjEsMTMuNHM5LjUtMS45LDExLjQtNy4xaDcuNmMtMi42LDkuOC0xMC4xLDEzLjctMTksMTMuN3MtMjEuMi02LjktMjEuMi0yMi42TTQzMS43LDM0LjFjLS4yLTcuNi00LjUtMTIuNC0xMS45LTEyLjRzLTExLjgsNC0xMi41LDEyLjRoMjQuNSwwWiI+PC9wYXRoPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik00NDUsNDguMmMwLTguNCw2LjEtMTEuOSwxNC0xMi44bDEwLjktMS4zYzQtLjUsNS40LTEuMyw1LjQtMi42di0xLjJjMC03LTMuNi04LjgtOS44LTguOHMtOS44LDEuOS05LjgsNy40djFoLTguMnYtMS44YzAtOC44LDYuMS0xMy4xLDE4LjItMTMuMXMxOC4xLDQuNiwxOC4xLDE1LjJ2MjkuNGgtOHYtNy4xaC0uM2MtLjgsMS43LTUsNy45LTE1LjcsNy45cy0xNC42LTMuNi0xNC42LTEyLjNNNDYxLjgsNTMuOGM5LjIsMCwxMy41LTUuNywxMy41LTEwLjR2LTQuOGMtLjYuOS0xLjcsMS41LTYsMmwtOC4yLDEuMWMtNS41LjctNy41LDIuNi03LjUsNi4xczMsNi4xLDguMiw2LjEiPjwvcGF0aD48cGF0aCBjbGFzcz0ic3QwIiBkPSJNNTQwLjgsMjIuMmMtNi4xLDAtMTAuNCw0LjMtMTAuNCwxMi4xdjI1LjNoLTguNXYtMjUuM2MwLTcuOC0zLjEtMTIuMS05LjQtMTIuMXMtMTAuNCw0LjMtMTAuNCwxMi4xdjI1LjNoLTguNVYxNS45aDguNXY4LjhoLjJjLjctMy4zLDQuOS05LjYsMTMuNS05LjZzMTEuNCwyLjksMTMuNSw5LjljMS0zLjUsNS4zLTkuOSwxNC41LTkuOXMxNC45LDUsMTQuOSwxNy4zdjI3LjJoLTguNXYtMjUuM2MwLTcuOC0zLTEyLjEtOS40LTEyLjEiPjwvcGF0aD48cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTAxLjEsMjYuOWgtMjdjLTQuNywwLTkuMy0xLjEtMTMuNi0zLjJsLTIxLjMtMTAuNmMtMy45LTItOC4zLTMtMTIuNy0zSDBWLjhoMjdjNC43LDAsOS40LDEuMSwxMy42LDMuMmwyMS4zLDEwLjZjMy45LDIsOC4zLDMsMTIuNywzaDI2LjZzMCw5LjQsMCw5LjRaTTEwMS4xLDM0LjNoLTI2LjZjLTQuNCwwLTguNy0xLTEyLjctM2wtMjEuMy0xMC42Yy00LjItMi4xLTguOS0zLjItMTMuNi0zLjJIMHY5LjRoMjYuNmM0LjQsMCw4LjcsMSwxMi43LDNsMjEuMywxMC42YzQuMiwyLjEsOC45LDMuMiwxMy42LDMuMmgyN3YtOS40aDBaTTEwMS4xLDUxLjFoLTI2LjZjLTQuNCwwLTguNy0xLTEyLjctM2wtMjEuMy0xMC42Yy00LjItMi4xLTguOS0zLjItMTMuNi0zLjJIMHY5LjRoMjYuNmM0LjQsMCw4LjcsMSwxMi43LDNsMjEuMywxMC42YzQuMiwyLjEsOC45LDMuMiwxMy42LDMuMmgyN3YtOS40Wk0zNy41LDYwLjVsLTEyLjUtNi4yYy00LjItMi4xLTguOS0zLjItMTMuNi0zLjJIMHY5LjRoMzcuNVpNNjMuNi44bDEyLjUsNi4yYzQuMiwyLjEsOC45LDMuMiwxMy42LDMuMmgxMS41Vi44aC0zNy41WiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+" class="header-logo" alt="NextStream"><span class="header-sep">|</span><span class="header-label">Panel de Turnos</span><span class="header-sep">&mdash;</span><span class="header-label">Datacenter</span><span class="header-dcsm">DCSM</span><span style="flex:1"></span><span class="unsaved-badge" id="unsaved-badge" style="display:none">&#9679; Sin guardar</span><button class="btn btn-mode" id="btn-mode" onclick="location.reload()" title="Cambiar modo de acceso"></button><button class="btn btn-theme" id="btn-theme" onclick="toggleTheme()" title="Cambiar tema">🌙</button><button class="btn" id="btn-xlsx" onclick="downloadXLSX()" title="Descargar en Excel">&#128197; Excel</button><button class="btn btn-danger" id="btn-undo" onclick="undoChanges()" disabled>&#8629; Deshacer</button><button class="btn btn-primary" id="btn-save" onclick="saveChanges()" disabled>Guardar</button></div><div class="legend"><div class="legend-item"><div class="legend-chip chip-D">D</div>D&iacute;a 08:00&ndash;16:30</div><div class="legend-item"><div class="legend-chip chip-T">T</div>Tarde 16:00&ndash;00:30</div><div class="legend-item"><div class="legend-chip chip-N">N</div>Noche 00:00&ndash;08:30</div><div class="legend-item"><div class="legend-chip chip-L">L</div>Libre</div><div class="legend-item"><div class="legend-chip chip-C">C</div>Compensado</div><div class="legend-item"><div class="legend-chip chip-E">E</div>Extendido</div><div class="legend-item"><div class="legend-chip chip-V">V</div>Vacaciones</div><div class="legend-item"><div class="legend-chip chip-I">I</div>Licencia</div><div class="legend-item" style="color:var(--holiday)">&#x1F7E0; Feriado</div></div><div class="cal-nav"><button onclick="nav(-7)" title="Retroceder 7 días">&#9664;&#9664;</button><button onclick="nav(-1)" title="Día anterior">&#9664;</button><div class="date-range" id="date-range"></div><button onclick="nav(1)" title="Día siguiente">&#9654;</button><button onclick="nav(7)" title="Avanzar 7 días">&#9654;&#9654;</button><button class="today-btn" onclick="goToday()">Hoy</button></div><div class="main-layout"><div class="cal-wrapper"><table id="cal-table"></table></div><div class="comments-panel" id="comments-panel"><div class="comments-panel-title">&#128172; Comentarios</div><div class="comments-empty">Sin comentarios</div></div><div class="mid-panel" id="mid-panel"></div><div class="alerts-panel" id="alerts-panel"></div></div><div class="shift-dropdown" id="dropdown"></div><div class="comment-tooltip" id="comment-tooltip"></div><div id="login-overlay"><div class="login-box"><h1>Panel de Turnos DCSM</h1><p>Selecciona c&oacute;mo deseas ingresar</p><div id="login-choices"><button class="login-btn primary" id="login-admin">&#128274; Administrador</button><button class="login-btn" id="login-read">&#128065;&#65039; Modo Lectura</button></div><div id="login-pass"><input type="password" class="login-input" id="login-pass-input" placeholder="Clave de administrador" autocomplete="off"><button class="login-btn primary" id="login-pass-submit">Ingresar</button><div id="login-error"></div><button id="login-back">&#8592; Volver</button></div></div></div><div id="toast"></div>
 <script>
 const SUPABASE_URL='https://qwhinhcgbquosyvfqpcn.supabase.co';
 const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3aGluaGNnYnF1b3N5dmZxcGNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MDAyOTUsImV4cCI6MjA5NTA3NjI5NX0.UN1JwwA_4rYRQrLlfpsmu2MTw0CXqjTqjMOFHcZdaYY';
@@ -230,9 +252,10 @@ function getSupervisor(dateStr){
   return SUP_ROTATION[((weekNum%3)+3)%3];
 }
 
-let viewStart=getMonday(today());
+let viewStart=(function(){var t=new Date();return new Date(t.getFullYear(),t.getMonth(),1);})();
 let modifications={};
 let dayComments=(function(){try{var s=localStorage.getItem('dcsm_comments');return s?JSON.parse(s):{}}catch(e){return{}}})();
+let cellColors=(function(){try{var s=localStorage.getItem('dcsm_cell_colors');return s?JSON.parse(s):{}}catch(e){return{}}})();
 let activeDD=null;
 
 function today(){var d=new Date();d.setHours(0,0,0,0);return d;}
@@ -246,12 +269,18 @@ function getCode(name,dateStr){
   return (p&&p.t&&p.t[dateStr])||null;
 }
 
-function nav(w){viewStart=addDays(viewStart,w*7);render();}
-function goToday(){viewStart=getMonday(today());render();}
+function nav(w){viewStart=addDays(viewStart,w);render();}
+function goToday(){var t=today();viewStart=new Date(t.getFullYear(),t.getMonth(),1);render();}
 
+function getViewDayCount(){
+  // Show the full month that viewStart belongs to, with min 28 and max 31
+  var m=viewStart.getMonth(),y=viewStart.getFullYear();
+  return new Date(y,m+1,0).getDate();
+}
 function render(){
   var days=[],i;
-  for(i=0;i<28;i++)days.push(addDays(viewStart,i));
+  var nDays=getViewDayCount();
+  for(i=0;i<nDays;i++)days.push(addDays(viewStart,i));
   var endDate=days[days.length-1];
   document.getElementById('date-range').textContent=
     days[0].getDate()+' '+MONTHS[days[0].getMonth()]+' \u2014 '+endDate.getDate()+' '+MONTHS[endDate.getMonth()]+' '+endDate.getFullYear();
@@ -296,9 +325,11 @@ function render(){
         isMod=modifications[name]&&modifications[name][ds3]!==undefined;
         tdCls='td-shift';if(isTod2)tdCls+=' is-today';if(isHol2)tdCls+=' is-holiday';if(isSun2)tdCls+=' is-sunday';
         var hasComment=!!(dayComments[name]&&dayComments[name][ds3]);
+        var cellColor=(cellColors[name]&&cellColors[name][ds3])||null;
 var tooltipAttr=hasComment?' data-comment="'+dayComments[name][ds3].replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/\x3c/g,'&lt;')+'"':'';
 h+='<td class="'+tdCls+'" data-name="'+name+'" data-date="'+ds3+'"'+tooltipAttr+'>';
-        h+='<div class="shift-chip chip-'+code+(isMod?' modified':'')+(hasComment?' has-comment':'')+'">';
+        var chipStyle=cellColor?' style="background:'+cellColor+';color:#fff;"':'';
+        h+='<div class="shift-chip chip-'+code+(isMod?' modified':'')+(hasComment?' has-comment':'')+(cellColor?' custom-color':'')+'"'+chipStyle+'>';
         h+=code+'</div></td>';
       }
       h+='</tr>';
@@ -328,7 +359,25 @@ function applySelection(){
   if(!selectedCell)return;
   var nm=selectedCell.name.replace(/"/g,'');
   var td=document.querySelector('td.td-shift[data-name="'+nm+'"][data-date="'+selectedCell.date+'"]');
-  if(td){td.classList.add('selected');td.scrollIntoView({block:'nearest',inline:'nearest'});}
+  if(td){
+    td.classList.add('selected');
+    // Scroll the cal-wrapper to keep the selected cell visible, but never scroll past the name column
+    var wrapper=document.querySelector('.cal-wrapper');
+    if(wrapper){
+      var tr=td.getBoundingClientRect();
+      var wr=wrapper.getBoundingClientRect();
+      var nameCol=wrapper.querySelector('td.td-name');
+      var nameWidth=nameCol?nameCol.offsetWidth:150;
+      // Left edge: account for sticky name column
+      var leftEdge=wr.left+nameWidth;
+      if(tr.left<leftEdge){
+        wrapper.scrollLeft-=(leftEdge-tr.left+4);
+        if(wrapper.scrollLeft<0)wrapper.scrollLeft=0;
+      } else if(tr.right>wr.right-4){
+        wrapper.scrollLeft+=(tr.right-wr.right+4);
+      }
+    }
+  }
 }
 document.addEventListener('keydown',function(e){
   var tag=(e.target&&e.target.tagName)||'';
@@ -346,8 +395,27 @@ document.addEventListener('keydown',function(e){
   else return;
   selectedCell={name:members[mi],date:ds(dt)};
   var changed=false,sd=new Date(selectedCell.date+' 00:00:00');
-  while(sd<viewStart){viewStart=addDays(viewStart,-7);changed=true;}
-  while(sd>addDays(viewStart,27)){viewStart=addDays(viewStart,7);changed=true;}
+  var nDays=getViewDayCount();
+  var viewEnd=addDays(viewStart,nDays-1);
+  if(sd<viewStart){
+    // Move viewStart back 1 day; if we crossed into a new month, snap to that month's 1st day
+    var prevStart=addDays(viewStart,-1);
+    if(prevStart.getMonth()!==viewStart.getMonth()){
+      viewStart=new Date(prevStart.getFullYear(),prevStart.getMonth(),1);
+    } else {
+      viewStart=prevStart;
+    }
+    changed=true;
+  } else if(sd>viewEnd){
+    // Move viewStart forward 1 day; if we crossed into a new month, snap to that month's start
+    var nextStart=addDays(viewStart,1);
+    if(nextStart.getMonth()!==viewStart.getMonth()){
+      viewStart=new Date(nextStart.getFullYear(),nextStart.getMonth(),1);
+    } else {
+      viewStart=nextStart;
+    }
+    changed=true;
+  }
   if(changed){render();}else{applySelection();}
 });
 
@@ -365,21 +433,30 @@ function openDDAt(name,dateStr,tdEl){if(appMode!=='admin')return;
 ddh+='<div class="dd-comment-section"><div class="dd-comment-label">Comentario del d&#237;a</div>';
 ddh+='<textarea class="dd-comment-input" id="dd-comment-input" rows="2" placeholder="Agregar nota...">'+existingComment.replace(/&/g,'&amp;').replace(/\x3c/g,'&lt;')+'</textarea>';
 ddh+='<button class="dd-comment-btn" id="dd-comment-save">Guardar comentario</button></div>';
+  // Color picker
+  var CELL_COLORS=['#1a3a5c','#2d1b5c','#1a4a2e','#4a1a1a','#3d3000','#1a3d40','#3d1a35','#4a3500','#888','#c0392b','#27ae60','#f39c12','#2980b9','#8e44ad','#16a085','#d35400'];
+  var curColor=(cellColors[name]&&cellColors[name][dateStr])||null;
+  ddh+='<div class="dd-color-section"><div class="dd-color-label">Color de celda</div><div class="dd-color-swatches" id="dd-color-swatches">';
+  for(var ci=0;ci<CELL_COLORS.length;ci++){var cc=CELL_COLORS[ci];ddh+='<div class="dd-color-swatch'+(curColor===cc?' active':'')+'" style="background:'+cc+'" data-color="'+cc+'" title="'+cc+'"></div>';}
+  ddh+='</div><button class="dd-color-clear" id="dd-color-clear">&#10005; Sin color personalizado</button></div>';
 dd.innerHTML=ddh;
 dd.querySelector('#dd-comment-save').addEventListener('click',function(){saveComment(name,dateStr,dd.querySelector('#dd-comment-input').value);});
+  dd.querySelector('#dd-color-swatches').addEventListener('click',function(e){var sw=e.target.closest('.dd-color-swatch');if(!sw)return;var col=sw.getAttribute('data-color');saveCellColor(name,dateStr,col);closeDD();});
+  dd.querySelector('#dd-color-clear').addEventListener('click',function(){saveCellColor(name,dateStr,null);closeDD();});
   var r=tdEl.getBoundingClientRect();
   var top=r.bottom+4,left=r.left;
   if(left+170>window.innerWidth)left=window.innerWidth-174;
-  if(top+350>window.innerHeight)top=r.top-354;
+  if(top+420>window.innerHeight)top=r.top-424;
   dd.style.cssText='display:grid;top:'+top+'px;left:'+left+'px';
   activeDD=dd;
   dd.onclick=function(e){var opt=e.target.closest('.dd-opt');if(!opt)return;setShift(opt.getAttribute('data-name'),opt.getAttribute('data-date'),opt.getAttribute('data-code'));closeDD();};
 }
 function closeDD(){if(activeDD){activeDD.style.display='none';activeDD=null;}}
+function saveCellColor(name,dateStr,color){if(appMode!=='admin')return;if(!cellColors[name])cellColors[name]={};if(color)cellColors[name][dateStr]=color;else delete cellColors[name][dateStr];if(!Object.keys(cellColors[name]).length)delete cellColors[name];try{localStorage.setItem('dcsm_cell_colors',JSON.stringify(cellColors));}catch(e){}render();}
 function saveComment(name,dateStr,text){if(appMode!=='admin')return;text=text.trim();if(!dayComments[name])dayComments[name]={};if(text)dayComments[name][dateStr]=text;else delete dayComments[name][dateStr];if(!Object.keys(dayComments[name]).length)delete dayComments[name];try{localStorage.setItem('dcsm_comments',JSON.stringify(dayComments));}catch(e){}closeDD();render();}
 let commentsCollapsed=(function(){try{return localStorage.getItem('dcsm_comments_collapsed')==='1';}catch(e){return false;}})();
 function toggleComments(){commentsCollapsed=!commentsCollapsed;try{localStorage.setItem('dcsm_comments_collapsed',commentsCollapsed?'1':'0');}catch(e){}renderCommentsPanel();}
-function renderCommentsPanel(){var panel0=document.getElementById('comments-panel');if(!panel0)return;panel0.classList.toggle('collapsed',commentsCollapsed);if(commentsCollapsed){panel0.innerHTML='<button class="cp-collapsed-btn" onclick="toggleComments()" title="Mostrar comentarios">&#128172;</button>';return;}var startStr=ds(viewStart);var endStr=ds(addDays(viewStart,27));var allComments=[];Object.keys(dayComments).forEach(function(name){Object.keys(dayComments[name]).forEach(function(dateStr){if(dateStr>=startStr&&dateStr<=endStr)allComments.push({name:name,dateStr:dateStr,text:dayComments[name][dateStr]});});});allComments.sort(function(a,b){return a.dateStr.localeCompare(b.dateStr);});var panel=document.getElementById('comments-panel');if(!panel)return;var MSHORT=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];var h='<div class="comments-panel-title"><span>&#128172; Comentarios</span><button class="cp-toggle" onclick="toggleComments()" title="Ocultar panel">&#10005; Ocultar</button></div>';if(allComments.length===0){h+='<div class="comments-empty">Sin comentarios</div>';panel.innerHTML=h;return;}allComments.forEach(function(c){var d=new Date(c.dateStr+' 00:00:00');var label=d.getDate()+' '+MSHORT[d.getMonth()]+' &#8212; '+c.name.split(' ')[0];var safeText=c.text.replace(/&/g,'&amp;').replace(/\x3c/g,'&lt;');var safeN=c.name.replace(/'/g,"\\'");var safeD=c.dateStr;h+='<div class="comment-item"><div class="comment-item-header"><span class="comment-date">'+label+'</span><span class="comment-item-actions"><button class="comment-action-btn" onclick="editComment(\'' +safeN+ '\',\'' +safeD+ '\')">&#9998;</button><button class="comment-action-btn del" onclick="deleteComment(\'' +safeN+ '\',\'' +safeD+ '\')">&#10005;</button></span></div><div class="comment-text">'+safeText+'</div></div>';});panel.innerHTML=h;}
+function renderCommentsPanel(){var panel0=document.getElementById('comments-panel');if(!panel0)return;panel0.classList.toggle('collapsed',commentsCollapsed);if(commentsCollapsed){panel0.innerHTML='<button class="cp-collapsed-btn" onclick="toggleComments()" title="Mostrar comentarios">&#128172;</button>';return;}var nDays=getViewDayCount();var startStr=ds(viewStart);var endStr=ds(addDays(viewStart,nDays-1));var allComments=[];Object.keys(dayComments).forEach(function(name){Object.keys(dayComments[name]).forEach(function(dateStr){if(dateStr>=startStr&&dateStr<=endStr)allComments.push({name:name,dateStr:dateStr,text:dayComments[name][dateStr]});});});allComments.sort(function(a,b){return a.dateStr.localeCompare(b.dateStr);});var panel=document.getElementById('comments-panel');if(!panel)return;var MSHORT=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];var h='<div class="comments-panel-title"><span>&#128172; Comentarios</span><button class="cp-toggle" onclick="toggleComments()" title="Ocultar panel">&#10005; Ocultar</button></div>';if(allComments.length===0){h+='<div class="comments-empty">Sin comentarios</div>';panel.innerHTML=h;return;}allComments.forEach(function(c){var d=new Date(c.dateStr+' 00:00:00');var label=d.getDate()+' '+MSHORT[d.getMonth()]+' &#8212; '+c.name.split(' ')[0];var safeText=c.text.replace(/&/g,'&amp;').replace(/\x3c/g,'&lt;');var safeN=c.name.replace(/'/g,"\\'");var safeD=c.dateStr;var actionsHtml=appMode==='admin'?'<span class="comment-item-actions"><button class="comment-action-btn" onclick="editComment(\'' +safeN+ '\',\'' +safeD+ '\')">&#9998;</button><button class="comment-action-btn del" onclick="deleteComment(\'' +safeN+ '\',\'' +safeD+ '\')">&#10005;</button></span>':'';h+='<div class="comment-item"><div class="comment-item-header"><span class="comment-date">'+label+'</span>'+actionsHtml+'</div><div class="comment-text">'+safeText+'</div></div>';});panel.innerHTML=h;}
 function editComment(name,dateStr){if(appMode!=='admin')return;var text=dayComments[name]&&dayComments[name][dateStr]?dayComments[name][dateStr]:'';var newText=prompt('Editar comentario:',text);if(newText===null)return;saveComment(name,dateStr,newText);}
 function deleteComment(name,dateStr){if(appMode!=='admin')return;if(!confirm('\u00bfEliminar este comentario?'))return;saveComment(name,dateStr,'');}
 
@@ -446,8 +523,13 @@ async function saveChanges(){if(appMode!=='admin')return;
 
 var midPanelMonth=(new Date()).getMonth();
 var midPanelYear=(new Date()).getFullYear();
+var midPanelCollapsed=(function(){try{return localStorage.getItem('dcsm_mid_collapsed')==='1';}catch(e){return false;}})();
+function toggleMidPanel(){midPanelCollapsed=!midPanelCollapsed;try{localStorage.setItem('dcsm_mid_collapsed',midPanelCollapsed?'1':'0');}catch(e){}renderMidPanel();}
 // MID PANEL: Libres+Compensados en domingos
 function renderMidPanel(newM,newY){if(newM!==undefined){midPanelMonth=newM;midPanelYear=newY;}
+  var panel=document.getElementById('mid-panel');if(!panel)return;
+  panel.classList.toggle('collapsed',midPanelCollapsed);
+  if(midPanelCollapsed){panel.innerHTML='<button class="mid-panel-toggle" onclick="toggleMidPanel()" title="Mostrar L+C en domingos">&#9788;</button>';return;}
   var month=midPanelMonth,year=midPanelYear;
   var daysInMonth=new Date(year,month+1,0).getDate();
   var sundays=[];
@@ -457,7 +539,7 @@ function renderMidPanel(newM,newY){if(newM!==undefined){midPanelMonth=newM;midPa
   }
   var prevM=(month+11)%12,prevY=month===0?year-1:year;
 var nextM=(month+1)%12,nextY=month===11?year+1:year;
-var h='<div class="mid-header">L+C en domingos</div>';
+var h='<div class="mid-panel-header-row"><div class="mid-header">L+C en domingos</div><button class="cp-toggle" onclick="toggleMidPanel()" title="Ocultar panel">&#10005;</button></div>';
 h+='<div class="mid-month-nav">';
 h+='<button class="mid-nav-btn" onclick="renderMidPanel('+prevM+','+prevY+')">&#9664;</button>';
 h+='<span class="mid-month-label">'+MONTHS[month]+' '+year+'</span>';
@@ -468,7 +550,6 @@ h+='</div>';
     h+='<div class="mid-group-title">'+group.icon+' '+group.esp+'</div>';
     group.members.forEach(function(name){
       if(MID_EXCLUDE.indexOf(name)>=0)return;
-      // Count L or C on Sundays this month
       var count=0;
       sundays.forEach(function(dateStr){
         var c=getCode(name,dateStr);
@@ -481,7 +562,7 @@ h+='</div>';
         +'</div>';
     });
   });
-  document.getElementById('mid-panel').innerHTML=h;
+  panel.innerHTML=h;
 }
 
 var appMode='read';
@@ -533,7 +614,12 @@ async function reopenAlert(id){if(appMode!=='admin')return;
     showToast('Alerta reabierta');
   }catch(e){showToast('Sin conexión al guardar');}
 }
+var alertsCollapsed=(function(){try{return localStorage.getItem('dcsm_alerts_collapsed')==='1';}catch(e){return false;}})();
+function toggleAlertsPanel(){alertsCollapsed=!alertsCollapsed;try{localStorage.setItem('dcsm_alerts_collapsed',alertsCollapsed?'1':'0');}catch(e){}renderAlerts();}
 function renderAlerts(){
+  var apanel=document.getElementById('alerts-panel');if(!apanel)return;
+  apanel.classList.toggle('collapsed',alertsCollapsed);
+  if(alertsCollapsed){apanel.innerHTML='<button class="alerts-panel-toggle" onclick="toggleAlertsPanel()" title="Mostrar alertas">&#128276;</button>';return;}
   var now=new Date();now.setHours(0,0,0,0);
   var month=now.getMonth(),year=now.getFullYear();
   var windowDays=[],i,d;
@@ -603,7 +689,7 @@ function renderAlerts(){
       +'<button class="alert-close-btn" onclick="forceCloseAlert(\''+a._id+'\')">✓ Cerrar forzosamente</button></div>';
   }
 
-  var h='<div class="alerts-header">\ud83d\udd14 Alertas \u2014 Pr\u00f3ximos 14 d\u00edas'+(total>0?'<span class="alert-count">'+total+'</span>':'')+'</div>';
+  var h='<div class="alerts-header-row"><div class="alerts-header-label">\ud83d\udd14 Alertas \u2014 Pr\u00f3ximos 14 d\u00edas'+(total>0?'<span class="alert-count">'+total+'</span>':'')+'</div><button class="cp-toggle" onclick="toggleAlertsPanel()" title="Ocultar alertas">&#10005;</button></div>';
   if(allEmpty)h+='<div class="alert-ok">\u2705 Sin alertas</div>';
   if(alerts.high.length){h+='<div class="alert-section"><div class="alert-section-title">\ud83d\udd34 Cr\u00edticas ('+uc(alerts.high)+')</div>';alerts.high.forEach(function(a){h+=card(a,'high');});h+='</div>';}
   if(alerts.medium.length){h+='<div class="alert-section"><div class="alert-section-title">\ud83d\udfe1 Advertencias ('+uc(alerts.medium)+')</div>';alerts.medium.forEach(function(a){h+=card(a,'medium');});h+='</div>';}
@@ -626,6 +712,353 @@ function toggleTheme(){
 
 var toastTimer;
 function showToast(msg){var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show');},3000);}
+
+// ---- XLSX Download ----
+function downloadXLSX(){
+  var today2=today();
+  var defStart=ds(new Date(today2.getFullYear(),today2.getMonth(),1));
+  var defEnd=ds(new Date(today2.getFullYear(),today2.getMonth()+1,0));
+  var range=prompt('Ingresa el rango de fechas a descargar\n(formato: YYYY-MM-DD al YYYY-MM-DD)',defStart+' al '+defEnd);
+  if(!range)return;
+  var parts=range.trim().split(/\s+al\s+/i);
+  if(parts.length!==2){alert('Formato inválido. Usa: YYYY-MM-DD al YYYY-MM-DD');return;}
+  var from=parts[0].trim(),to=parts[1].trim();
+  var startD=new Date(from+' 00:00:00'),endD=new Date(to+' 00:00:00');
+  if(isNaN(startD)||isNaN(endD)){alert('Fechas inválidas');return;}
+  if(startD>endD){alert('La fecha inicio debe ser anterior a la fecha fin');return;}
+  var days=[],cur=new Date(startD);
+  while(cur<=endD){days.push(ds(new Date(cur)));cur.setDate(cur.getDate()+1);}
+
+  // Load JSZip then build
+  if(!window.JSZip){
+    var s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    s.onload=function(){buildXLSX(days,from,to);};
+    s.onerror=function(){alert('No se pudo cargar JSZip. Verifique la conexión.');};
+    document.head.appendChild(s);
+  } else {
+    buildXLSX(days,from,to);
+  }
+}
+
+function buildXLSX(days,from,to){
+  var MSHORT=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  var DOW_LABEL=['D','L','M','M','J','V','S'];
+
+  // Shift styles: theme dark
+  var SHIFT_STYLE={
+    D:{bg:'FF1C2128',fg:'FF7D8590'},T:{bg:'FF1C2128',fg:'FF7D8590'},N:{bg:'FF1C2128',fg:'FF7D8590'},
+    L:{bg:'FF0D2D1A',fg:'FF3FB950'},C:{bg:'FF1E1535',fg:'FFA371F7'},
+    E:{bg:'FF2D1515',fg:'FFF47067'},V:{bg:'FF0A2A30',fg:'FF22D3EE'},I:{bg:'FF2D0A1A',fg:'FFF472B6'}
+  };
+
+  // ---- Build cell data ----
+  // Each cell: {v: value string, bg: ARGB, fg: ARGB, bold: bool, halign: str, wrap: bool, sz: num}
+  var rows=[]; // array of arrays of cell objects
+
+  // Helper
+  function cell(v,bg,fg,bold,halign,wrap,sz){
+    return {v:v||'',bg:bg||'FF161B22',fg:fg||'FFE6EDF3',bold:!!bold,halign:halign||'center',wrap:!!wrap,sz:sz||9};
+  }
+
+  // Row 0: month headers
+  var monthRow=[cell('Técnico','FF2F81F7','FFFFFFFF',true,'left',false,10)];
+  // Row 1: day headers
+  var dayRow=[cell('','FF21262D','FF7D8590',true,'left',false,9)];
+
+  var monthMerges=[]; // {r1,c1,r2,c2}
+  var curMonth='',curStart=1;
+  days.forEach(function(dateStr,ci){
+    var d=new Date(dateStr+' 00:00:00');
+    var mo=MSHORT[d.getMonth()]+' '+d.getFullYear();
+    if(mo!==curMonth){
+      if(curMonth!=='')monthMerges.push({r1:0,c1:curStart,r2:0,c2:ci});
+      curMonth=mo;curStart=ci+1;
+      monthRow.push(cell(mo,'FF2F81F7','FFFFFFFF',true,'center',false,10));
+    } else {
+      monthRow.push(cell('','FF2F81F7','FFFFFFFF',true,'center',false,10));
+    }
+    var isSun=d.getDay()===0;
+    var bg=isSun?'FF2A1A18':'FF21262D';var fg=isSun?'FFF47067':'FF7D8590';
+    dayRow.push(cell(DOW_LABEL[d.getDay()]+'\n'+d.getDate(),bg,fg,true,'center',true,9));
+  });
+  monthMerges.push({r1:0,c1:curStart,r2:0,c2:days.length});
+  rows.push(monthRow);rows.push(dayRow);
+
+  // Collect comments for comment sheet
+  var commentsList=[];
+
+  // Group and member rows
+  var groupRowIdxs=[];
+  GROUPS.forEach(function(group){
+    var gRow=[cell(group.icon+' '+group.label,'FF30363D','FFE6EDF3',true,'left',false,9)];
+    for(var j=0;j<days.length;j++)gRow.push(cell('','FF30363D','FFE6EDF3',false,'center',false,9));
+    groupRowIdxs.push(rows.length);
+    rows.push(gRow);
+
+    group.members.forEach(function(name){
+      var mRow=[cell(name,'FF161B22','FFE6EDF3',false,'left',false,9)];
+      days.forEach(function(dateStr){
+        var code=getCode(name,dateStr)||'L';
+        var comment=(dayComments[name]&&dayComments[name][dateStr])||'';
+        var customColor=(cellColors[name]&&cellColors[name][dateStr])||null;
+        if(comment)commentsList.push({name:name,dateStr:dateStr,code:code,text:comment});
+        var sty=SHIFT_STYLE[code]||{bg:'FF1C2128',fg:'FF7D8590'};
+        var bg=customColor?('FF'+customColor.replace('#','').toUpperCase()):sty.bg;
+        var fg=customColor?'FFFFFFFF':sty.fg;
+        var d2=new Date(dateStr+' 00:00:00');
+        if(!customColor&&d2.getDay()===0)bg='FF2A1A18';
+        mRow.push(cell(code+(comment?' ✎':''),bg,fg,true,'center',false,9));
+      });
+      rows.push(mRow);
+    });
+  });
+
+  // ---- Build XML parts ----
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  // Collect unique styles
+  var styleMap={};var styleList=[];
+  function getStyleId(c){
+    var key=c.bg+'|'+c.fg+'|'+(c.bold?1:0)+'|'+c.halign+'|'+(c.wrap?1:0)+'|'+c.sz;
+    if(styleMap[key]===undefined){styleMap[key]=styleList.length;styleList.push(c);}
+    return styleMap[key];
+  }
+  // Pre-register all styles
+  rows.forEach(function(row){row.forEach(function(c){getStyleId(c);});});
+
+  // Build styles XML
+  var fonts='<fonts count="'+(styleList.length+1)+'">';
+  fonts+='<font><sz val="9"/><name val="Calibri"/></font>'; // default
+  styleList.forEach(function(c){
+    fonts+='<font>'+(c.bold?'<b/>':'')+'<sz val="'+c.sz+'"/><color rgb="'+c.fg+'"/><name val="Calibri"/></font>';
+  });
+  fonts+='</fonts>';
+
+  var fills='<fills count="'+(styleList.length+2)+'">';
+  fills+='<fill><patternFill patternType="none"/></fill>';
+  fills+='<fill><patternFill patternType="gray125"/></fill>';
+  styleList.forEach(function(c){
+    fills+='<fill><patternFill patternType="solid"><fgColor rgb="'+c.bg+'"/><bgColor indexed="64"/></patternFill></fill>';
+  });
+  fills+='</fills>';
+
+  var borders='<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border>'
+    +'<border><left style="thin"><color rgb="FF30363D"/></left><right style="thin"><color rgb="FF30363D"/></right>'
+    +'<top style="thin"><color rgb="FF30363D"/></top><bottom style="thin"><color rgb="FF30363D"/></bottom><diagonal/></border></borders>';
+
+  var cellXfs='<cellXfs>';
+  cellXfs+='<xf numFmtId="0" fontId="0" fillId="0" borderId="0"/>'; // default xf 0
+  styleList.forEach(function(c,i){
+    var align='<alignment horizontal="'+c.halign+'" vertical="center"'+(c.wrap?' wrapText="1"':'')+'/>'; 
+    cellXfs+='<xf numFmtId="0" fontId="'+(i+1)+'" fillId="'+(i+2)+'" borderId="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1">'+align+'</xf>';
+  });
+  cellXfs+='</cellXfs>';
+
+  var stylesXml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+    +fonts+fills+borders
+    +'<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+    +cellXfs
+    +'<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'
+    +'</styleSheet>';
+
+  // Shared strings
+  var ssMap={};var ssList=[];
+  function getSS(v){var sv=String(v);if(ssMap[sv]===undefined){ssMap[sv]=ssList.length;ssList.push(sv);}return ssMap[sv];}
+  rows.forEach(function(row){row.forEach(function(c){getSS(c.v);});});
+
+  var sharedStrXml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+ssList.length+'" uniqueCount="'+ssList.length+'">';
+  ssList.forEach(function(s){
+    // Handle newlines with <t xml:space="preserve"> and <r> runs
+    if(s.indexOf('\n')>=0){
+      sharedStrXml+='<si>';
+      s.split('\n').forEach(function(part,pi){
+        sharedStrXml+='<r>'+(pi>0?'<rPr></rPr>':'')+'<t xml:space="preserve">'+esc(part)+'</t></r>';
+      });
+      sharedStrXml+='</si>';
+    } else {
+      sharedStrXml+='<si><t xml:space="preserve">'+esc(s)+'</t></si>';
+    }
+  });
+  sharedStrXml+='</sst>';
+
+  // Column widths
+  var colsXml='<cols><col min="1" max="1" width="22" customWidth="1"/><col min="2" max="'+(days.length+1)+'" width="4.5" customWidth="1"/></cols>';
+
+  // Sheet data
+  var enc_col=function(c){var s='';do{s=String.fromCharCode(65+(c%26))+s;c=Math.floor(c/26)-1;}while(c>=0);return s;};
+  var sheetData='<sheetData>';
+  rows.forEach(function(row,ri){
+    var ht=ri===1?'30':ri===0?'18':'20';
+    sheetData+='<row r="'+(ri+1)+'" ht="'+ht+'" customHeight="1">';
+    row.forEach(function(c,ci){
+      var addr=enc_col(ci)+(ri+1);
+      var xfId=styleMap[c.bg+'|'+c.fg+'|'+(c.bold?1:0)+'|'+c.halign+'|'+(c.wrap?1:0)+'|'+c.sz]+1;
+      sheetData+='<c r="'+addr+'" t="s" s="'+xfId+'"><v>'+getSS(c.v)+'</v></c>';
+    });
+    sheetData+='</row>';
+  });
+  sheetData+='</sheetData>';
+
+  // Merges
+  var mergesXml='';
+  if(monthMerges.length){
+    mergesXml='<mergeCells count="'+monthMerges.length+'">';
+    monthMerges.forEach(function(m){
+      mergesXml+='<mergeCell ref="'+enc_col(m.c1)+'1:'+enc_col(m.c2)+'1"/>';
+    });
+    mergesXml+='</mergeCells>';
+  }
+
+  var sheetXml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+    +'<sheetViews><sheetView workbookViewId="0"><pane xSplit="1" ySplit="2" topLeftCell="B3" activePane="bottomRight" state="frozen"/></sheetView></sheetViews>'
+    +colsXml+sheetData+mergesXml
+    +'</worksheet>';
+
+  // ---- Comments sheet ----
+  var sheet2Xml='';
+  commentsList.sort(function(a,b){return a.dateStr.localeCompare(b.dateStr);});
+  var c2rows=[];
+  // header
+  c2rows.push([
+    cell('Técnico','FF2F81F7','FFFFFFFF',true,'center',false,10),
+    cell('Fecha','FF2F81F7','FFFFFFFF',true,'center',false,10),
+    cell('Turno','FF2F81F7','FFFFFFFF',true,'center',false,10),
+    cell('Comentario','FF2F81F7','FFFFFFFF',true,'center',false,10)
+  ]);
+  commentsList.forEach(function(c,ci){
+    var d=new Date(c.dateStr+' 00:00:00');
+    var rowBg=ci%2===0?'FF1C2128':'FF161B22';
+    var sty=SHIFT_STYLE[c.code]||{bg:'FF1C2128',fg:'FF7D8590'};
+    c2rows.push([
+      cell(c.name,rowBg,'FFE6EDF3',false,'left',false,9),
+      cell(c.dateStr+' '+DOW_LABEL[d.getDay()]+' '+d.getDate()+' '+MSHORT[d.getMonth()],rowBg,'FFE6EDF3',false,'left',false,9),
+      cell(c.code,sty.bg,sty.fg,true,'center',false,9),
+      cell(c.text,rowBg,'FFE6EDF3',false,'left',true,9)
+    ]);
+  });
+
+  // Collect styles for sheet2
+  c2rows.forEach(function(row){row.forEach(function(c){getStyleId(c);});});
+
+  if(c2rows.length>1){
+    var cols2Xml='<cols><col min="1" max="1" width="22" customWidth="1"/><col min="2" max="2" width="18" customWidth="1"/><col min="3" max="3" width="8" customWidth="1"/><col min="4" max="4" width="55" customWidth="1"/></cols>';
+    var sd2='<sheetData>';
+    c2rows.forEach(function(row,ri){
+      sd2+='<row r="'+(ri+1)+'" ht="20" customHeight="1">';
+      row.forEach(function(c,ci){
+        var addr=enc_col(ci)+(ri+1);
+        var xfId=styleMap[c.bg+'|'+c.fg+'|'+(c.bold?1:0)+'|'+c.halign+'|'+(c.wrap?1:0)+'|'+c.sz]+1;
+        sd2+='<c r="'+addr+'" t="s" s="'+xfId+'"><v>'+getSS(c.v)+'</v></c>';
+      });
+      sd2+='</row>';
+    });
+    sd2+='</sheetData>';
+    sheet2Xml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      +'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+      +cols2Xml+sd2+'</worksheet>';
+  }
+
+  // Rebuild shared strings AFTER all rows including sheet2
+  // (styles were already registered, now rebuild sharedStrings with sheet2 content)
+  if(sheet2Xml){
+    c2rows.forEach(function(row){row.forEach(function(c){getSS(c.v);});});
+    sharedStrXml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      +'<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+ssList.length+'" uniqueCount="'+ssList.length+'">';
+    ssList.forEach(function(s){
+      if(s.indexOf('\n')>=0){
+        sharedStrXml+='<si>';
+        s.split('\n').forEach(function(part){sharedStrXml+='<r><t xml:space="preserve">'+esc(part)+'</t></r>';});
+        sharedStrXml+='</si>';
+      } else {
+        sharedStrXml+='<si><t xml:space="preserve">'+esc(s)+'</t></si>';
+      }
+    });
+    sharedStrXml+='</sst>';
+  }
+
+  // Rebuild styles XML now that sheet2 styles are registered
+  var fontsXml2='<fonts count="'+(styleList.length+1)+'">';
+  fontsXml2+='<font><sz val="9"/><name val="Calibri"/></font>';
+  styleList.forEach(function(c){
+    fontsXml2+='<font>'+(c.bold?'<b/>':'')+'<sz val="'+c.sz+'"/><color rgb="'+c.fg+'"/><name val="Calibri"/></font>';
+  });
+  fontsXml2+='</fonts>';
+  var fillsXml2='<fills count="'+(styleList.length+2)+'">';
+  fillsXml2+='<fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>';
+  styleList.forEach(function(c){
+    fillsXml2+='<fill><patternFill patternType="solid"><fgColor rgb="'+c.bg+'"/><bgColor indexed="64"/></patternFill></fill>';
+  });
+  fillsXml2+='</fills>';
+  var cellXfs2='<cellXfs><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/>';
+  styleList.forEach(function(c,i){
+    var align='<alignment horizontal="'+c.halign+'" vertical="center"'+(c.wrap?' wrapText="1"':'')+'/>'; 
+    cellXfs2+='<xf numFmtId="0" fontId="'+(i+1)+'" fillId="'+(i+2)+'" borderId="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1">'+align+'</xf>';
+  });
+  cellXfs2+='</cellXfs>';
+  stylesXml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+    +fontsXml2+fillsXml2+borders
+    +'<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+    +cellXfs2
+    +'<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'
+    +'</styleSheet>';
+
+  // ---- Assemble ZIP ----
+  var sheetCount=sheet2Xml?2:1;
+  var wbXml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+    +'<sheets>'
+    +'<sheet name="Turnos" sheetId="1" r:id="rId1"/>'
+    +(sheetCount>1?'<sheet name="Comentarios" sheetId="2" r:id="rId2"/>'  :'')
+    +'</sheets></workbook>';
+
+  var wbRels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+    +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+    +(sheetCount>1?'<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/>':'')
+    +'<Relationship Id="rIdS" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>'
+    +'<Relationship Id="rIdSt" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+    +'</Relationships>';
+
+  var contentTypes='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+    +'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+    +'<Default Extension="xml" ContentType="application/xml"/>'
+    +'<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+    +'<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+    +(sheetCount>1?'<Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>':'')
+    +'<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>'
+    +'<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
+    +'</Types>';
+
+  var appRels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+    +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+    +'</Relationships>';
+
+  var zip=new JSZip();
+  zip.file('[Content_Types].xml',contentTypes);
+  zip.folder('_rels').file('.rels',appRels);
+  var xl=zip.folder('xl');
+  xl.file('workbook.xml',wbXml);
+  xl.file('sharedStrings.xml',sharedStrXml);
+  xl.file('styles.xml',stylesXml);
+  xl.folder('_rels').file('workbook.xml.rels',wbRels);
+  xl.folder('worksheets').file('sheet1.xml',sheetXml);
+  if(sheet2Xml)xl.folder('worksheets').file('sheet2.xml',sheet2Xml);
+
+  zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}).then(function(blob){
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;a.download='Turnos_DCSM_'+from+'_al_'+to+'.xlsx';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(url);},1000);
+    showToast('✅ Excel descargado');
+  });
+}
 
 // Load saved changes from Supabase on startup
 // Fetch only records with id > base (modified after initial load)
