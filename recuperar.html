@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rescate de comentarios y colores — DCSM</title>
+<style>
+  body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0d1117;color:#e6edf3;display:flex;min-height:100vh;margin:0;align-items:center;justify-content:center;padding:20px;}
+  .box{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:28px 32px;max-width:520px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.5);}
+  h1{font-size:18px;margin:0 0 6px;}
+  p{font-size:13px;color:#7d8590;line-height:1.5;}
+  .stat{background:#21262d;border:1px solid #30363d;border-radius:8px;padding:12px 14px;margin:14px 0;font-size:14px;}
+  .stat b{color:#3fb950;font-size:18px;}
+  button{width:100%;padding:12px 16px;font-size:15px;font-weight:700;border:none;border-radius:8px;background:#2f81f7;color:#fff;cursor:pointer;margin-top:8px;}
+  button:disabled{opacity:.5;cursor:default;}
+  button:hover:not(:disabled){opacity:.9;}
+  #result{margin-top:14px;font-size:13px;line-height:1.5;white-space:pre-wrap;}
+  .ok{color:#3fb950;}
+  .err{color:#f85149;}
+  .warn{color:#d29922;}
+  code{background:#21262d;padding:1px 5px;border-radius:4px;font-size:12px;}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>🛟 Rescate de comentarios y colores</h1>
+  <p>Esta página <b>solo lee</b> lo que este navegador tiene guardado y lo sube a la base compartida (Supabase). No abre el calendario y no borra nada.</p>
+  <div class="stat" id="found">Buscando datos guardados…</div>
+  <button id="btn" disabled>Subir a Supabase</button>
+  <div id="result"></div>
+  <p style="margin-top:18px">Cuando termine y diga <span class="ok">✅ Listo</span>, ya puedes abrir el calendario normalmente.</p>
+</div>
+<script>
+var BASE='https://aerialmeister.github.io/turnos-dcsm/index.html';
+var comments={}, colors={}, com=[], col=[];
+try{ comments=JSON.parse(localStorage.getItem('dcsm_comments')||'{}'); }catch(e){}
+try{ colors=JSON.parse(localStorage.getItem('dcsm_cell_colors')||'{}'); }catch(e){}
+for(var n in comments){ for(var d in comments[n]){ if(comments[n][d]) com.push({tecnico:n,fecha:d,comentario:comments[n][d]}); } }
+for(var n2 in colors){ for(var d2 in colors[n2]){ if(colors[n2][d2]) col.push({tecnico:n2,fecha:d2,color:colors[n2][d2]}); } }
+
+var foundEl=document.getElementById('found');
+var btn=document.getElementById('btn');
+var res=document.getElementById('result');
+
+foundEl.innerHTML='Encontrados en este navegador:<br><b>'+com.length+'</b> comentarios &nbsp;·&nbsp; <b>'+col.length+'</b> colores de celda';
+
+if(com.length===0 && col.length===0){
+  foundEl.innerHTML+='<br><span class="warn" style="font-size:12px">⚠️ No se encontraron datos locales en este navegador. (¿Es el navegador correcto, el del colaborador con los comentarios?)</span>';
+}else{
+  btn.disabled=false;
+}
+
+btn.addEventListener('click', async function(){
+  btn.disabled=true; res.innerHTML='Subiendo…';
+  try{
+    var html=await fetch(BASE+'?x='+Date.now()).then(function(r){return r.text();});
+    var SU=(html.match(/SUPABASE_URL='([^']+)'/)||[])[1];
+    var AK=(html.match(/SUPABASE_ANON='([^']+)'/)||[])[1];
+    if(!SU||!AK){ res.innerHTML='<span class="err">No pude leer la configuración de Supabase. Avisa a quien te compartió esto.</span>'; return; }
+    var H={'Content-Type':'application/json','apikey':AK,'Authorization':'Bearer '+AK,'Prefer':'resolution=merge-duplicates,return=minimal'};
+    var msg='';
+    if(com.length){
+      var r1=await fetch(SU+'/rest/v1/comentarios',{method:'POST',headers:H,body:JSON.stringify(com)});
+      msg+=(r1.ok?'✅':'❌')+' Comentarios: '+(r1.ok?('subidos '+com.length):('error '+r1.status))+'\n';
+    }
+    if(col.length){
+      var r2=await fetch(SU+'/rest/v1/colores_celda',{method:'POST',headers:H,body:JSON.stringify(col)});
+      msg+=(r2.ok?'✅':'❌')+' Colores: '+(r2.ok?('subidos '+col.length):('error '+r2.status))+'\n';
+    }
+    var allok=msg.indexOf('❌')<0;
+    res.innerHTML='<span class="'+(allok?'ok':'err')+'">'+msg+'</span>'+(allok?'<br><b class="ok">✅ Listo.</b> Los datos quedaron en la base compartida.':'<br><span class="err">Hubo un error. Avisa a quien te compartió esto.</span>');
+  }catch(e){
+    res.innerHTML='<span class="err">Error de conexión: '+e+'</span>';
+    btn.disabled=false;
+  }
+});
+</script>
+</body>
+</html>
