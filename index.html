@@ -1116,10 +1116,20 @@ async function init(){
     if(resR.ok){var rr=await resR.json();rr.forEach(function(x){if(x.alerta_key)alertResolutions[x.alerta_key]={justificacion:x.justificacion};});console.log('Loaded '+rr.length+' alert resolution(s) from Supabase');}
   }catch(e){console.log('Alert resolutions load error:',e);}
   try{
+    if(!localStorage.getItem('dcsm_migrated_comments')){
+      var upC=[];Object.keys(dayComments||{}).forEach(function(n){Object.keys(dayComments[n]).forEach(function(d){if(dayComments[n][d])upC.push({tecnico:n,fecha:d,comentario:dayComments[n][d]});});});
+      if(upC.length){try{await fetch(SUPABASE_URL+'/rest/v1/comentarios',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(upC)});console.log('Migrados '+upC.length+' comentario(s) locales a Supabase');}catch(e){console.log('Error migrando comentarios:',e);}}
+      try{localStorage.setItem('dcsm_migrated_comments','1');}catch(e){}
+    }
     var resC=await fetch(SUPABASE_URL+'/rest/v1/comentarios?select=tecnico,fecha,comentario',{method:'GET',headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Accept':'application/json'}});
     if(resC.ok){var cc=await resC.json();var nc={};cc.forEach(function(x){if(!x.tecnico||!x.fecha)return;var d=String(x.fecha).slice(0,10);if(!nc[x.tecnico])nc[x.tecnico]={};nc[x.tecnico][d]=x.comentario;});dayComments=nc;try{localStorage.setItem('dcsm_comments',JSON.stringify(dayComments));}catch(e){}console.log('Loaded '+cc.length+' comentario(s) from Supabase');}
   }catch(e){console.log('Comentarios load error:',e);}
   try{
+    if(!localStorage.getItem('dcsm_migrated_colors')){
+      var upK=[];Object.keys(cellColors||{}).forEach(function(n){Object.keys(cellColors[n]).forEach(function(d){if(cellColors[n][d])upK.push({tecnico:n,fecha:d,color:cellColors[n][d]});});});
+      if(upK.length){try{await fetch(SUPABASE_URL+'/rest/v1/colores_celda',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(upK)});console.log('Migrados '+upK.length+' color(es) locales a Supabase');}catch(e){console.log('Error migrando colores:',e);}}
+      try{localStorage.setItem('dcsm_migrated_colors','1');}catch(e){}
+    }
     var resCol=await fetch(SUPABASE_URL+'/rest/v1/colores_celda?select=tecnico,fecha,color',{method:'GET',headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Accept':'application/json'}});
     if(resCol.ok){var col=await resCol.json();var nco={};col.forEach(function(x){if(!x.tecnico||!x.fecha)return;var d=String(x.fecha).slice(0,10);if(!nco[x.tecnico])nco[x.tecnico]={};nco[x.tecnico][d]=x.color;});cellColors=nco;try{localStorage.setItem('dcsm_cell_colors',JSON.stringify(cellColors));}catch(e){}console.log('Loaded '+col.length+' color(es) de celda from Supabase');}
   }catch(e){console.log('Colores celda load error:',e);}
