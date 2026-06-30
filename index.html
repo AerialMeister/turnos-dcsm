@@ -452,8 +452,28 @@ dd.querySelector('#dd-comment-save').addEventListener('click',function(){saveCom
   dd.onclick=function(e){var opt=e.target.closest('.dd-opt');if(!opt)return;setShift(opt.getAttribute('data-name'),opt.getAttribute('data-date'),opt.getAttribute('data-code'));closeDD();};
 }
 function closeDD(){if(activeDD){activeDD.style.display='none';activeDD=null;}}
-function saveCellColor(name,dateStr,color){if(appMode!=='admin')return;if(!cellColors[name])cellColors[name]={};if(color)cellColors[name][dateStr]=color;else delete cellColors[name][dateStr];if(!Object.keys(cellColors[name]).length)delete cellColors[name];try{localStorage.setItem('dcsm_cell_colors',JSON.stringify(cellColors));}catch(e){}render();}
-function saveComment(name,dateStr,text){if(appMode!=='admin')return;text=text.trim();if(!dayComments[name])dayComments[name]={};if(text)dayComments[name][dateStr]=text;else delete dayComments[name][dateStr];if(!Object.keys(dayComments[name]).length)delete dayComments[name];try{localStorage.setItem('dcsm_comments',JSON.stringify(dayComments));}catch(e){}closeDD();render();}
+function saveCellColor(name,dateStr,color){if(appMode!=='admin')return;if(!cellColors[name])cellColors[name]={};if(color)cellColors[name][dateStr]=color;else delete cellColors[name][dateStr];if(!Object.keys(cellColors[name]).length)delete cellColors[name];try{localStorage.setItem('dcsm_cell_colors',JSON.stringify(cellColors));}catch(e){}render();syncCellColor(name,dateStr,color);}
+async function syncCellColor(name,dateStr,color){
+  try{
+    if(color){
+      var r=await fetch(SUPABASE_URL+'/rest/v1/colores_celda',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({tecnico:name,fecha:dateStr,color:color})});
+      if(!r.ok)console.log('Color no guardado en Supabase:',r.status);
+    }else{
+      await fetch(SUPABASE_URL+'/rest/v1/colores_celda?tecnico=eq.'+encodeURIComponent(name)+'&fecha=eq.'+encodeURIComponent(dateStr),{method:'DELETE',headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON}});
+    }
+  }catch(e){console.log('Sync color error:',e);}
+}
+function saveComment(name,dateStr,text){if(appMode!=='admin')return;text=text.trim();if(!dayComments[name])dayComments[name]={};if(text)dayComments[name][dateStr]=text;else delete dayComments[name][dateStr];if(!Object.keys(dayComments[name]).length)delete dayComments[name];try{localStorage.setItem('dcsm_comments',JSON.stringify(dayComments));}catch(e){}closeDD();render();syncComment(name,dateStr,text);}
+async function syncComment(name,dateStr,text){
+  try{
+    if(text){
+      var r=await fetch(SUPABASE_URL+'/rest/v1/comentarios',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({tecnico:name,fecha:dateStr,comentario:text})});
+      if(!r.ok)console.log('Comentario no guardado en Supabase:',r.status);
+    }else{
+      await fetch(SUPABASE_URL+'/rest/v1/comentarios?tecnico=eq.'+encodeURIComponent(name)+'&fecha=eq.'+encodeURIComponent(dateStr),{method:'DELETE',headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON}});
+    }
+  }catch(e){console.log('Sync comentario error:',e);}
+}
 let commentsCollapsed=(function(){try{return localStorage.getItem('dcsm_comments_collapsed')==='1';}catch(e){return false;}})();
 function toggleComments(){commentsCollapsed=!commentsCollapsed;try{localStorage.setItem('dcsm_comments_collapsed',commentsCollapsed?'1':'0');}catch(e){}renderCommentsPanel();}
 function renderCommentsPanel(){var panel0=document.getElementById('comments-panel');if(!panel0)return;panel0.classList.toggle('collapsed',commentsCollapsed);if(commentsCollapsed){panel0.innerHTML='<button class="cp-collapsed-btn" onclick="toggleComments()" title="Mostrar comentarios">&#128172;</button>';return;}var nDays=getViewDayCount();var startStr=ds(viewStart);var endStr=ds(addDays(viewStart,nDays-1));var allComments=[];Object.keys(dayComments).forEach(function(name){Object.keys(dayComments[name]).forEach(function(dateStr){if(dateStr>=startStr&&dateStr<=endStr)allComments.push({name:name,dateStr:dateStr,text:dayComments[name][dateStr]});});});allComments.sort(function(a,b){return a.dateStr.localeCompare(b.dateStr);});var panel=document.getElementById('comments-panel');if(!panel)return;var MSHORT=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];var h='<div class="comments-panel-title"><span>&#128172; Comentarios</span><button class="cp-toggle" onclick="toggleComments()" title="Ocultar panel">&#10005; Ocultar</button></div>';if(allComments.length===0){h+='<div class="comments-empty">Sin comentarios</div>';panel.innerHTML=h;return;}allComments.forEach(function(c){var d=new Date(c.dateStr+' 00:00:00');var label=d.getDate()+' '+MSHORT[d.getMonth()]+' &#8212; '+c.name.split(' ')[0];var safeText=c.text.replace(/&/g,'&amp;').replace(/\x3c/g,'&lt;');var safeN=c.name.replace(/'/g,"\\'");var safeD=c.dateStr;var actionsHtml=appMode==='admin'?'<span class="comment-item-actions"><button class="comment-action-btn" onclick="editComment(\'' +safeN+ '\',\'' +safeD+ '\')">&#9998;</button><button class="comment-action-btn del" onclick="deleteComment(\'' +safeN+ '\',\'' +safeD+ '\')">&#10005;</button></span>':'';h+='<div class="comment-item"><div class="comment-item-header"><span class="comment-date">'+label+'</span>'+actionsHtml+'</div><div class="comment-text">'+safeText+'</div></div>';});panel.innerHTML=h;}
@@ -1095,6 +1115,14 @@ async function init(){
     var resR=await fetch(SUPABASE_URL+'/rest/v1/alertas_resueltas?select=alerta_key,justificacion',{method:'GET',headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Accept':'application/json'}});
     if(resR.ok){var rr=await resR.json();rr.forEach(function(x){if(x.alerta_key)alertResolutions[x.alerta_key]={justificacion:x.justificacion};});console.log('Loaded '+rr.length+' alert resolution(s) from Supabase');}
   }catch(e){console.log('Alert resolutions load error:',e);}
+  try{
+    var resC=await fetch(SUPABASE_URL+'/rest/v1/comentarios?select=tecnico,fecha,comentario',{method:'GET',headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Accept':'application/json'}});
+    if(resC.ok){var cc=await resC.json();var nc={};cc.forEach(function(x){if(!x.tecnico||!x.fecha)return;var d=String(x.fecha).slice(0,10);if(!nc[x.tecnico])nc[x.tecnico]={};nc[x.tecnico][d]=x.comentario;});dayComments=nc;try{localStorage.setItem('dcsm_comments',JSON.stringify(dayComments));}catch(e){}console.log('Loaded '+cc.length+' comentario(s) from Supabase');}
+  }catch(e){console.log('Comentarios load error:',e);}
+  try{
+    var resCol=await fetch(SUPABASE_URL+'/rest/v1/colores_celda?select=tecnico,fecha,color',{method:'GET',headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Accept':'application/json'}});
+    if(resCol.ok){var col=await resCol.json();var nco={};col.forEach(function(x){if(!x.tecnico||!x.fecha)return;var d=String(x.fecha).slice(0,10);if(!nco[x.tecnico])nco[x.tecnico]={};nco[x.tecnico][d]=x.color;});cellColors=nco;try{localStorage.setItem('dcsm_cell_colors',JSON.stringify(cellColors));}catch(e){}console.log('Loaded '+col.length+' color(es) de celda from Supabase');}
+  }catch(e){console.log('Colores celda load error:',e);}
   render();
 }
 init();
